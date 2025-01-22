@@ -1,20 +1,20 @@
-import requests
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-import time
+# pip3 install seleniumbase
+from seleniumbase import Driver
 
-PATH = "C:\\Program Files (x86)\\Google\\ChromeDrivers\\chromedriver.exe"
-service = Service(PATH)
+# initialize the driver in GUI mode with UC enabled
+driver = Driver(uc=True, headless=False)
 
-driver = webdriver.Chrome(service=service)
-driver.get("https://egapay.github.io/")
+# set the target URL
+url = "https://www.indeed.com/jobs?q=data+analyst&l=New+York%2C+NY&vjk=6ff45e8464c20348"
 
-search = driver.find_element(By.XPATH, "//div[@id='buttons']//button[text()='Skills']")
-print(search.text)
-time.sleep(2)
-search.send_keys(Keys.RETURN)
-time.sleep(5)
+# open URL using UC mode with 6 second reconnect time to bypass initial detection
+driver.uc_open_with_reconnect(url, reconnect_time=6)
 
+# attempt to click the CAPTCHA checkbox if present
+driver.uc_gui_click_captcha()
+
+# take a screenshot of the current page and save it
+driver.save_screenshot("cloudflare-challenge.png")
+
+# close the browser and end the session
 driver.quit()
